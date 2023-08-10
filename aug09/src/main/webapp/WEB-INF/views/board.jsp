@@ -14,51 +14,87 @@
 <script src="./js/jquery-3.7.0.min.js"></script>
 
 <style type="text/css">
-
 .title {
 	text-align: left;
+}
+
+.detail-detail {
+	width: 100%;
+	height: auto;
+}
+
+.detail-name, .detail-date-read {
+	width: 100%;
+	height: 30px;
+	border-bottom: 1px solid #c0c0c0;
+}
+
+.detail-date-read {
+	background-color: silver;
+}
+
+.detail-date {
+	padding-left: 10px;
+	float: left;
+}
+
+.detail-read {
+	padding-right: 10px;
+	float: right;
+}
+
+.detail-content {
+	width: 100%;
+	height: auto;
 }
 </style>
 
 <script type="text/javascript">
-$(function(){
-	$(".detail").click(function(){
-		let first = $(this).children("td").eq(0);
-		alert(first.text());
-		
+	$(function() {
+		$(".detail").click(
+				function() {
+					let bno = $(this).children("td").eq(0).html();
+					let title = $(this).children("td").eq(1).text();
+					let date = $(this).children("td").eq(2).html();
+					let name = $(this).children("td").eq(3).html();
+					let read = $(this).children("td").eq(4).html();
+					let comment = $(this).children("td").eq(1).children(
+							".bg-secondary").text().length + 1;
+					if (comment > 0) {
+						title = title.slice(0, -comment);
+					}
+					$.ajax({
+						url : "./detail",
+						data : {
+							"bno" : bno
+						},
+						type : "post",
+						dataType : "json",
+						success : function(data) {
+							$(".modal-title").text(title);
+							$(".detail-name").text(name);
+							$(".detail-date").text(date);
+							$(".detail-read").text(read);
+							$(".detail-content").html(data.content);
+							$("#exampleModal").modal("show");
+						},
+						
+						error : function(error) {
+							alert("err");
+						}
+					});
+
+					//alert(first.text());
+					//$(".modal-bno").text(bno + "/" + name + "/" + read);
+				});
+		//$(".modalOpen").click(function(){$("#exampleModal").modal("show");});
 	});
-	
-	
-	
-})
-
-
 </script>
 
 </head>
 <body>
-	<!-- Navigation-->
-	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-		<div class="container">
-			<a class="navbar-brand" href="./"><img
-				src="assets/img/navbar-logo.svg" alt="..." /></a>
-			<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
-				aria-controls="navbarResponsive" aria-expanded="false"
-				aria-label="Toggle navigation">
-				Menu <i class="fas fa-bars ms-1"></i>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarResponsive">
-				<ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0">
-					<li class="nav-item"><a class="nav-link" href="./board">board</a></li>
-					<li class="nav-item"><a class="nav-link" href="#portfolio">Portfolio</a></li>
-					<li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-					<li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
-					<li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+    <%@ include file="menu.jsp" %>
+
 	<!-- Masthead-->
 	<header class="masthead">
 		<div class="container">
@@ -76,38 +112,45 @@ $(function(){
 				<c:forEach items="${list }" var="row">
 					<tr class="detail">
 						<td>${row.bno }</td>
-						<td class="title">${row.btitle }
-							<c:if test="${row.commentcount ne 0}">
-						 	&nbsp; &nbsp;   
-						 	<span class="badge bg-secondary">${row.commentcount }</span>
-						</c:if>
-						</td>
+						<td class="title">${row.btitle }<c:if
+								test="${row.commentcount ne 0}">
+								<span class="badge bg-secondary">${row.commentcount }</span>
+							</c:if></td>
 						<td>${row.bdate }</td>
 						<td>${row.m_name }</td>
 						<td>${row.blike }</td>
 					</tr>
 				</c:forEach>
 			</table>
-			<button type="button" class="btn btn-secondary">버튼 눌러주세요</button>
-			<button type="button" id="modal1" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">MODAL</button>
+			<button type="button" class="btn btn-secondary" onclick="location.href='./write'">글쓰기 버튼</button>
+			<button type="button" id="modal1" class="btn btn-success"
+				data-bs-toggle="modal" data-bs-target="#exampleModal">MODAL</button>
+			<button type="button" class="modalOpen btn btn-success">모달
+				열기</button>
+
 		</div>
 	</header>
 
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					<h5 class="modal-title" id="exampleModalLabel"></h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
 						aria-label="Close"></button>
 				</div>
-				<div class="modal-body">...</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
+				<div class="modal-body">
+					<div class="detail-detail">
+						<div class="detail-name">이름</div>
+						<div class="detail-date-read">
+							<div class="detail-date">날짜</div>
+							<div class="detail-read">읽음</div>
+						</div>
+						<div class="detail-content">본문내용</div>
+					</div>
+
 				</div>
 			</div>
 		</div>

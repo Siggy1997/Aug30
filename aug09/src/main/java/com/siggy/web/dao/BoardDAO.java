@@ -11,4 +11,6 @@ import com.siggy.web.dto.BoardDTO;
 @Mapper
 public interface BoardDAO {
 	List<BoardDTO> boardList();
+
+	String detail(int bno);
 }
