@@ -8,7 +8,7 @@
 	</select>
 	
 	<select id="detail" parameterType="Integer" resultType="BoardDTO">
-		SELECT bcontent,uuid  FROM boardview WHERE bno=#{bno }
+		SELECT bcontent,uuid, bip  FROM boardview WHERE bno=#{bno }
 	</select>
 	
 	<insert id="write" parameterType="BoardDTO">
@@ -20,5 +20,7 @@
 	<update id="readUP">
 		UPDATE board SET blike=blike+1 WHERE bno=#{bno}
 	</update>
+	
+
 
 </mapper>

@@ -3,6 +3,7 @@ package com.siggy.web.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class BoardController {
 	@GetMapping("/board")
 	public String board(Model model) {
 		List<BoardDTO> list = boardService.boardList();
-		//System.out.println(list);
+		System.out.println(list);
 		model.addAttribute("list", list);		
 		return "board";
 	}
@@ -47,6 +48,7 @@ public class BoardController {
 		 */
 		json.put("content", dto.getBcontent());
 		json.put("uuid", dto.getUuid());
+		json.put("ip", dto.getBip());
 		
 		
 		System.out.println(json.toString());
@@ -59,15 +61,18 @@ public class BoardController {
 	}
 	
 	@PostMapping("/write")
-	public String write(HttpServletRequest request) {
+	public String write(HttpServletRequest request, HttpSession session) {
 		//System.out.println(request.getParameter("title"));
 		//System.out.println(request.getParameter("content"));
-		BoardDTO dto = new BoardDTO();
-		dto.setBtitle(request.getParameter("title"));
-		dto.setBcontent(request.getParameter("content"));
-
-		dto.setM_id("siggy");
-		int result = boardService.write(dto);
+		if (session.getAttribute("mid") != null) {
+			BoardDTO dto = new BoardDTO();
+			dto.setBtitle(request.getParameter("title"));
+			dto.setBcontent(request.getParameter("content"));
+			
+			dto.setM_id((String)session.getAttribute("mid"));
+			int result = boardService.write(dto);
+			
+		}
 		return "redirect:/board";
 	}
 	

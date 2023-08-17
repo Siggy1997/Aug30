@@ -76,8 +76,9 @@
 					name +='<input type="hidden" class="uuid" value="'+data.uuid+'">';
 					$(".detail-name").html(name);
 					$(".detail-date").text(date);
-					$(".detail-read").text(read);
+					$(".detail-read").text(data.ip+" / " +read);
 					$(".detail-content").html(data.content);
+					
 					$("#exampleModal").modal("show");
 				},
 				error:function(error){alert("에러가 발생했습니다. 다시 시도하지 마십시오.");}
