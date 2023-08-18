@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LoginDAO {
 
 	public Map<String, Object> login(Map<String, String> map);
+
+	public Map<String, Object> myInfo(String id);
 	
 	
 }

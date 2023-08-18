@@ -65,7 +65,7 @@
                		</tr>
                		</thead>
                		<tbody><c:forEach items="${list }" var="row">
-               		<tr class="row detail">
+               		<tr class="row detail" onclick="location.href='./mbdetail?mbno=${row.mb_no}'">
                			<td class="col-1">${row.mb_no}</td>
                			<td class="col-6 title">${row.mb_title}</td>
                			<td class="col-2">${row.m_name}</td>

@@ -6,9 +6,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.siggy.web.service.LoginService;
 
@@ -61,4 +65,21 @@ public class LoginController {
       session.invalidate();
       return "redirect:/";
    }
+   
+   //2023-08-18 요구 사항 확인
+   //@PathVariable 사용법
+   @GetMapping("/myInfo@{id}")
+   public ModelAndView myInfo(@PathVariable("id") String id, HttpSession session){
+	   //model.addAttribute("myInfo", loginService.myInfo(id) );
+	   
+	   Object myInfo = loginService.myInfo(id);
+	   ModelAndView mv = new ModelAndView("myInfo");
+	   System.out.println(mv);
+	   mv.addObject("my", myInfo);
+	   
+	   //회원가입 할때 
+	   return mv;
+   }
+   
+   
 }

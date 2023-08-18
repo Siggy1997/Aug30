@@ -36,7 +36,6 @@ public class MultiBoardController {
 			HttpSession session) {
 
 		// 로그인한 사용자만 접근할 수 있게 해주세요.
-		System.out.println(session.getAttribute("mid"));
 		if (session.getAttribute("mid") != null) {
 			model.addAttribute("board", board);
 			return "mbwrite";
@@ -60,7 +59,6 @@ public class MultiBoardController {
 	
 	@GetMapping("/mbdetail")
 	public String mbDetail(@RequestParam("mbno") int mbno, Model model) {
-		System.out.println(mbno);
 		Map<String, Object> detail = mbService.mbdetail(mbno);
 		model.addAttribute("detail", detail);
 		return "mbdetail";
