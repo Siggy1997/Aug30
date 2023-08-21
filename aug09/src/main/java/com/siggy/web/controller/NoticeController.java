@@ -22,5 +22,5 @@ public class NoticeController {
 		model.addAttribute("list", list);
 		
 		return "notice";
-	}
+	} 
 }

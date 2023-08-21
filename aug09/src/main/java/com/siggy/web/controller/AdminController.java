@@ -1,15 +1,22 @@
 package com.siggy.web.controller;
 
+import java.io.File;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.siggy.web.service.AdminService;
 import com.siggy.web.util.Util;
@@ -47,5 +54,51 @@ public class AdminController {
 		}
 
 	}
+	
+	@GetMapping("/main")
+	public String main() {
+		return "admin/main";
+	}
 
+	
+	@GetMapping("/notice")
+	public String notice(Model model) {
+		List<Map<String, Object>>list = adminService.notice();
+		
+		model.addAttribute("list", list);
+		
+		return "admin/notice";
+	}
+	
+	@PostMapping("/noticeWrite")
+	public String noticeWrite(@RequestParam("upFile") MultipartFile upfile, @RequestParam Map<String, Object>map) {
+		map.put("mno", 1);
+		map.put("upFile", upfile);
+		
+		
+		if (upfile.getSize()>0) {
+			//저장할 경로명 뽑기 request뽑기
+	         HttpServletRequest request = 
+	         ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+	         
+	         String path = request.getServletContext().getRealPath("/upload");
+	         System.out.println("실제 경로" + path);
+	         
+			//upfile정보보기
+			System.out.println(upfile.getOriginalFilename());
+			System.out.println(upfile.getSize());
+			System.out.println(upfile.getContentType());
+			File newfileName = new File(upfile.getOriginalFilename());
+			
+		}
+		//adminService.noticeWrite(map);
+		
+		
+		return "redirect:/admin/notice";
+	}
+	
+	
+	
+	
+	
 }

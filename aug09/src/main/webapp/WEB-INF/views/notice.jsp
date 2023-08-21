@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>board</title>
     <link href="css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/admin.css">
     <script src="./js/jquery-3.7.0.min.js"></script>
 	<style type="text/css">
 		.title{
@@ -88,7 +89,7 @@
 	</script>
 </head>
 <body>
-<%@ include file="menu.jsp" %>
+
  <!-- Masthead-->
         <header class="masthead">
             <div class="container">
