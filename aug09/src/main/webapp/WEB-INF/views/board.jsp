@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>board</title>
+<title> ❤ board</title>
     <link href="css/styles.css" rel="stylesheet" />
     <script src="./js/jquery-3.7.0.min.js"></script>
 	<style type="text/css">
@@ -41,18 +41,22 @@
 	<script type="text/javascript">
 	$(function(){
 		$(document).on("click", ".del", function(){
-			let bno = $(".bno").val();
-			let uuid = $(".uuid").val();
-			//alert(bno + "/" + uuid);
+			//가상 form만들어서 전송하기
 			let form = $('<form></form>');
-			form.attr("action", "./delete");
+			form.attr('action', './delete');
 			form.attr("method", "post");
 			
-			form.append($("<input>",{type:'hidden', name:"bno", value:bno}));
-			form.append($("<input>",{type:'hidden', name:"uuid", value:uuid}));
-			form.appendTo("body");
+			form.append($("<input>", {type:'hidden', name:"bno", value:$(".bno").val()}));
+			form.append($("<input>", {type:'hidden', name:"uuid", value:$(".uuid").val()}));
 			
+			form.appendTo("body");
 			form.submit();
+		});
+		
+		$(document).on("click", ".edit", function(){
+			let bno = $(".bno").val();
+			let uuid = $(".uuid").val();
+			alert(bno + " / " + uuid);
 		});
 		
 		
@@ -61,24 +65,23 @@
 			let title = $(this).children("td").eq(1).text();
 			let name = $(this).children("td").eq(2).html();
 			let date = $(this).children("td").eq(3).html();
-			let read = Number($(this).children("td").eq(4).html())+1;
+			let read = Number($(this).children("td").eq(4).html()) + 1;
 			let comment =  $(this).children("td").eq(1).children(".bg-secondary").text().length+1;
 			if(comment > 0){title = title.slice(0, -comment);}
 			$.ajax({
 				url:"./detail",
 				type: "post",
-				data: {"bno": bno},
+				data: {bno: bno},
 				dataType: "json",
 				success:function(data){
 					$(".modal-title").text(title);
-					name= name + '<img class="" src="./img/edit.png"><img class="del" src="./img/delete.png">';
-		            name +='<input type="hidden" class="bno" value="'+bno+'">';
-					name +='<input type="hidden" class="uuid" value="'+data.uuid+'">';
+					name = name + '<img class="" src="./img/edit.png"> <img class="del" src="./img/delete.png">';
+					name += '<input type="hidden" class="bno" value="'+bno+'">';
+					name += '<input type="hidden" class="uuid" value="'+data.uuid+'">';
 					$(".detail-name").html(name);
 					$(".detail-date").text(date);
-					$(".detail-read").text(data.ip+" / " +read);
+					$(".detail-read").text(data.ip+" / "+read);
 					$(".detail-content").html(data.content);
-					
 					$("#exampleModal").modal("show");
 				},
 				error:function(error){alert("에러가 발생했습니다. 다시 시도하지 마십시오.");}

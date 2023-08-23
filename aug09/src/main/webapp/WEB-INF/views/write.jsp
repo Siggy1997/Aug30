@@ -29,7 +29,8 @@
 	}
 }
 </style>
-<script type="text/javascript">
+<script>
+//제이쿼리일때
 	$(function(){
 		$(".writeBtn").click(function(){
 			let id = $("#title").val();
@@ -64,7 +65,7 @@
 					<input type="text" class="form-control" id="title" name="title">
 				</div>
 				<textarea id="summernote" name="content"></textarea>
-				<button type="submit" class="btn btn-primary writeBtn">저장</button>
+				<button type="button" class="btn btn-primary writeBtn">저장</button>
 			</form>
 			</div>
 		</div>

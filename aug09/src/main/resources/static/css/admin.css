@@ -1,149 +1,95 @@
 @charset "UTF-8";
-
 body {
 	margin: 0px;
 	padding: 0px;
 }
-a{
-	text-decoration: none;
-}
-.container {
+.container{
 	width: 100%;
 	height: 100vh;
 }
-.header {
+.menu{
 	position: absolute;
-	margin : 0;
-	padding: 0;
+	margin:0;
+	padding:0;
 	width: 50px;
 	height: 100vh;
-	background-color: black;
+	background-color: blue;
 	float: left;
 	overflow: hidden;
-	margin: 0;
-	/* border-radius: 0% 5% 5% 0%; */
 }
-.box{
-	font-weight: bolder;
-	color: white;
-}
-
-.header:hover {
+.menu:hover{
 	width: 200px;
-	transition: 0.3s;
+	transition: 0.5s;
 }
 
-.menu {
-	width: 200px;
-	padding-top: 80px;
-	height: calc(100vh - 50px);
-	overflow: hidden;
-}
-
-.logo {
-	margin: 25px;
-	width: 150px;
-	height: 150px;
-	background-color: gray;
-}
-
-.menu-item {
-	width: 200px;
-	height: 50px;
-	line-height: 50px;
-	overflow: hidden;
-	color: #F44336;
+.menu-item{
+	width: 190px;
 	margin: 5px;
+	color: white;
+	line-height: 50px;
+	padding-left: 5px;
+	overflow: hidden;
 	box-sizing: border-box;
 }
-
-.menu-item i {
-	margin-right: 13px;
-	margin-top : -5px;
+.menu-item i{
+	margin-top: -5px;
+	margin-right: 10px;
 	vertical-align: middle;
 }
 
-.menu-item a {
-	color: white;
-	text-decoration: none;
-}
-.menu-item:hover {
+.menu-item:hover{
 	width: 190px;
 	height: 50px;
-	margin-left: 10px;
 	margin-left: 5px;
-	background-color: white;
+	background-color: #c0c0c0;
 	box-sizing: border-box;
 	border-radius: 10px;
+	color: black;
 }
 
-.main {
+.main{
 	margin-left: 50px;
 	width: calc(100% - 50px);
 	height: 100vh;
-	float: left;
-}
-
-.article {
-	padding: 20px;
-	width: calc(100% -20px);
-	height: calc(100vh -20px);
-	box-sizing: border-box;
-}
-h2{
-	text-align: center;
-}
-.tableDiv{
-	width: calc(100% - 10px);
-	min-height: 657px; 
-	margin: 5px 0px;
-}
-thead{
-	background-color: #61BFFC;
+	float: right;
 }
 
 .article{
-	padding:0;
-	margin:0;
-	width: 100%;
-	height: 100vh;
-	text-align:center;
-	display: flex;
-	justify-content:center;  
+	width: calc(100% - 20px);
+	min-height: calc(100vh - 20px);
+	height:auto;
+	margin: 10px;
+	box-sizing: border-box;
 }
-.boxs{
-	clear:both;
- 	margin:0 auto;
- 	margin-top: 15%;
-	width: 100%;
-	min-height: 200px;
-	height: 100vh;
+h1{
+	margin-top: 0;
 }
+
+
 .box{
-	float: left;
-	margin: 50px;
-	height: 100px;
 	width: 100px;
-	padding: 10px;
+	height: 100px;
+	/* padding: 10px; */
 	text-align: center;
-	font-weight: bolder;
 	line-height: 100px;
 	border-radius: 50%;
 	overflow: hidden;
-	transition:0.3s;
+	transition: 0.5s;
 	border: 0px;
-	display: block;
+	background-color: yellow;
+	margin: 150px;
+	float:left;
 }
-
-.box:hover{
+.box:hover {
 	font-size: large;
 	font-weight: bolder;
 	margin: 0px;
 	height: 200px;
 	width: 200px;
 	line-height: 100px;
-	transition:0.4s;
+	transition: 0.5s;
 	border-radius: 20px;
+	margin: 100px;
 }
 #comment{
 	width: 100%; 
@@ -151,31 +97,15 @@ thead{
 	padding: 5px;
 	line-height: 30px;
 	overflow: visible;
-	animation: fadeInUp 1s;
-	
-}
-table th, table td{
-	text-align: center;
-}
-.title{
-	text-align: left;
-}
-#paging{
-	width: 100%;
-	height: 30px;
-	line-height: 30px;
-	text-align: center;
+	animation: fadeInUp 0.5s;
 }
 
-.modal {
-  width: 100%;
-  height: 90%;
-  margin: 0;
-  padding: 0;
-}
 
-.modal-dialog{
-  height: 100%;
-  min-height: 90%;
-  border-radius: 0;
-}
+
+
+
+
+
+
+
+

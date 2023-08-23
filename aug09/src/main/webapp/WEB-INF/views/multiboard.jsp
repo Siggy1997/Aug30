@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Multiboard</title>
+<title> ❤ Multiboard</title>
     <link href="css/styles.css" rel="stylesheet" />
     <script src="./js/jquery-3.7.0.min.js"></script>
 	<style type="text/css">
@@ -50,11 +50,8 @@
  <!-- Masthead-->
         <header class="masthead">
             <div class="container">
-               <h1>MultiBoard</h1>
-               
-               <c:choose>
-               		<c:when test="${fn:length(list) gt 0}">
-               		<table class="table table-dark table-hover table-striped">
+               <h1>multiboard</h1><c:choose><c:when test="${fn:length(list) gt 0 }">
+               	<table class="table table-dark table-hover table-striped">
                		<thead>
                		<tr class="row">
                			<th class="col-1">번호</th>
@@ -73,27 +70,11 @@
                			<td class="col-1">${row.mb_read}</td>
                		</tr></c:forEach>
                		</tbody>
-               </table>
-               		</c:when>
-					
-					<c:otherwise>
-						<h1>게시판에 글이 없습니다.</h1>
-					</c:otherwise>
-               </c:choose>
-               <c:if test="${sessionScope.mid ne null }">
-               <button type="button" class="btn btn-secondary" onclick="location.href='./mbwrite?board=${param.board}'">글쓰기</button>
-               
-               </c:if>
-             
+               </table></c:when><c:otherwise>
+               		<h1>게시판에 글이 없습니다.</h1></c:otherwise></c:choose><c:if test="${sessionScope.mid ne null }">
+               <button type="button" class="btn btn-secondary" onclick="location.href='./mbwrite?board=${param.board}'">글쓰기</button></c:if>
             </div>
         </header>
-
-
-
-
-
-
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src="js/scripts.js"></script>
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>

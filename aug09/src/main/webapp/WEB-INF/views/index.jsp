@@ -1,6 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
-
 <!DOCTYPE html>
 <html lang="ko">
     <head>
@@ -8,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="연습용" />
         <meta name="author" content="" />
-        <title>연습하고 있습니다.</title>
+        <title> ❤ index</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
@@ -28,13 +26,11 @@
         <header class="masthead">
             <div class="container">
                 <div class="masthead-subheading">
-                <c:if test="${sessionScope.mname ne null}">
-                
-                ${sessionScope.mname }님 반갑
+                <c:if test="${sessionScope.mname ne null }">
+	                ${sessionScope.mname }님 반갑습니다.
                 </c:if>
-                
-                <c:if test="${sessionScope.mname eq null}">
-					로그인 하시몽                
+                <c:if test="${sessionScope.mid eq null}">
+                	로그인해주세요.
                 </c:if>
                 
                 </div>

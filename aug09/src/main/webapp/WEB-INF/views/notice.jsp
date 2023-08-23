@@ -1,13 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>board</title>
+<title> ❤ notice</title>
+	<!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/admin.css">
     <script src="./js/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 	<style type="text/css">
 		.title{
 			text-align: left;
@@ -41,110 +43,47 @@
 	</style>
 	<script type="text/javascript">
 	$(function(){
-		$(document).on("click", ".del", function(){
-			let bno = $(".bno").val();
-			let uuid = $(".uuid").val();
-			//alert(bno + "/" + uuid);
-			let form = $('<form></form>');
-			form.attr("action", "./delete");
-			form.attr("method", "post");
-			
-			form.append($("<input>",{type:'hidden', name:"bno", value:bno}));
-			form.append($("<input>",{type:'hidden', name:"uuid", value:uuid}));
-			form.appendTo("body");
-			
-			form.submit();
-		});
 		
-		
-		$(".detail").click(function(){
-			let bno = $(this).children("td").eq(0).html();
-			let title = $(this).children("td").eq(1).text();
-			let name = $(this).children("td").eq(2).html();
-			let date = $(this).children("td").eq(3).html();
-			let read = Number($(this).children("td").eq(4).html())+1;
-			let comment =  $(this).children("td").eq(1).children(".bg-secondary").text().length+1;
-			if(comment > 0){title = title.slice(0, -comment);}
-			$.ajax({
-				url:"./detail",
-				type: "post",
-				data: {"bno": bno},
-				dataType: "json",
-				success:function(data){
-					$(".modal-title").text(title);
-					name= name + '<img class="" src="./img/edit.png"><img class="del" src="./img/delete.png">';
-		            name +='<input type="hidden" class="bno" value="'+bno+'">';
-					name +='<input type="hidden" class="uuid" value="'+data.uuid+'">';
-					$(".detail-name").html(name);
-					$(".detail-date").text(date);
-					$(".detail-read").text(data.ip+" / " +read);
-					$(".detail-content").html(data.content);
-					
-					$("#exampleModal").modal("show");
-				},
-				error:function(error){alert("에러가 발생했습니다. 다시 시도하지 마십시오.");}
-			});
-		});
 	});
 	</script>
 </head>
 <body>
-
+<%@ include file="menu.jsp" %>
  <!-- Masthead-->
         <header class="masthead">
             <div class="container">
-               <h1>게시판</h1>
-               <table class="table table-dark table-hover table-striped">
+               <h1>공지사항</h1><c:choose><c:when test="${fn:length(list) gt 0 }">
+               	<table class="table table-dark table-hover table-striped">
                		<thead>
                		<tr class="row">
                			<th class="col-1">번호</th>
-               			<th class="col-6">제목</th>
-               			<th class="col-2">글쓴이</th>
-               			<th class="col-2">날짜</th>
+               			<th class="col-5">제목</th>
+               			<th class="col-3">글쓴이</th>
+               			<th class="col-3">날짜</th>
                		</tr>
                		</thead>
                		<tbody><c:forEach items="${list }" var="row">
-               		<tr class="row detail">
+               		<tr class="row detail" onclick="location.href='./noticeDetail?nno=${row.nno}'">
                			<td class="col-1">${row.nno}</td>
-               			<td class="col-6 title">${row.ntitle}</td>
-               			<td class="col-2">${row.m_no}</td>
-               			<td class="col-2">${row.ndate}</td>
+               			<td class="col-5 title"><c:forTokens var="token" items="${row.nrealfile }" delims="." varStatus="status"><c:if test="${status.last}"><c:choose><c:when test="${token eq 'png' || token eq 'jpg' || token eq 'jpeg' || token eq 'bmp' || token eq 'gif' }"><i class="bi bi-image"></i></c:when><c:otherwise><i class="bi bi-file-earmark-richtext"></i></c:otherwise></c:choose></c:if></c:forTokens> ${row.ntitle}</td>
+               			<td class="col-3">${row.m_no}</td>
+               			<td class="col-3">${row.ndate}</td>
                		</tr></c:forEach>
                		</tbody>
-               </table>
-               <button type="button" class="btn btn-secondary" onclick="location.href='./write'">글쓰기</button>
+               </table></c:when><c:otherwise>
+               		<h1>게시판에 글이 없습니다.</h1></c:otherwise></c:choose><c:if test="${sessionScope.mid ne null }">
+               <button type="button" class="btn btn-secondary" onclick="location.href='./mbwrite?board=${param.board}'">글쓰기</button></c:if>
             </div>
         </header>
 
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      	<div class="detail-deail">
-      		 <div class="detail-name">이름</div>
-      		 <div class="detail-date-read">
-      		 	<div class="detail-date">날짜</div>
-      		 	<div class="detail-read">읽음</div>
-      		 </div>
-      		 <div class="detail-content">본문내용</div>
-      	</div>  
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
+        <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
 </body>
 </html>
