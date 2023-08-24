@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siggy.web.dao.AdminDAO">
+
+	<select id="adminLogin" parameterType="Map" resultType="Map">
+		<![CDATA[
+			SELECT
+			count(*) as count, m_name, m_grade
+			FROM members
+			WHERE m_id=#{id } AND AES_DECRYPT(UNHEX(m_pw),'sik')=#{pw } AND m_grade > 5
+		]]>
+	</select>
+	
+	<select id="list" resultType="Map">
+	  	 SELECT n.nno, n.ntitle, n.ndate, n.ndel, n.norifile, m.m_name
+ 		 FROM notice n 
+  		 JOIN members m
+ 		 on n.m_no = m.m_no
+ 		 ORDER BY nno DESC;
+	</select>
+	
+
+	
+	<insert id="noticeWrite" parameterType="Map">
+		INSERT INTO notice (ntitle, ncontent, m_no
+				<if test="upFile != null and upFile != ''">, norifile, nrealfile </if>)
+		VALUES (#{title}, #{content}, #{mno}
+				<if test="upFile != null and upFile != ''">, #{upFile}, #{realFile}</if>)
+	</insert>
+
+
+	<select id="noticeDetail" resultType="String" parameterType="Integer">
+	  	 SELECT ncontent
+	  	 FROM notice
+	  	 WHERE nno=#{nno};
+	</select>
+
+	<update id="noticeHide" parameterType="Map" >
+		UPDATE notice SET 
+		<if test="ndel==0"> ndel=1</if>
+		<if test="ndel==1">ndel=0</if>
+		WHERE nno=#{nno}
+	</update>
+
+		<select id="multiBoard" resultType="Map" >
+	  	 SELECT *
+	  	 FROM setupboard
+	</select>
+
+
+</mapper>
