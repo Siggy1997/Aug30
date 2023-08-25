@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
 		<div class="menu">
 			<div style="height: 50px;" ></div>
 			<div class="menu-item" ><i class="xi-emoticon-happy-o xi-2x"></i> Happy</div>

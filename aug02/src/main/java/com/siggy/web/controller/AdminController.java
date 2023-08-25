@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -164,22 +165,21 @@ public class AdminController {
 	// 2023-08-23
 	@PostMapping("/mail")
 	public String mail(@RequestParam Map<String, Object> map) throws EmailException {
-		//util.simpleMailSender(map);
+		// util.simpleMailSender(map);
 		util.htmlMailSender(map);
-		
-		
+
 		return "admin/mail";
 		// return "forward:/mail"; 위와 같은 말
 
 	}
 
-	//noticeDeatail
+	// noticeDeatail
 	@ResponseBody
 	@PostMapping("/noticeDetail")
 	public String noticeDeatail(@RequestParam("nno") int nno) {
 		System.out.println(nno);
 		ObjectNode json = JsonNodeFactory.instance.objectNode();
-		
+
 		/*
 		 * Map<String, Object> map = new HashMap<String, Object>(); map.put("bno", 123);
 		 * map.put("btitle", 1234); ObjectMapper jsonMap = new ObjectMapper(); try {
@@ -187,22 +187,22 @@ public class AdminController {
 		 * (JsonProcessingException e) { // TODO Auto-generated catch block
 		 * e.printStackTrace(); }
 		 */
-		
+
 		json.put("content", adminService.noticeDetail(nno));
 		return json.toString();
 	}
-	
-	//noticeHide
+
+	// noticeHide
 	@ResponseBody
 	@PostMapping("/noticeHide")
 	public String noticeHide(@RequestParam Map<String, Object> map) {
 		int result = adminService.noticeHide(map);
 		ObjectNode json = JsonNodeFactory.instance.objectNode();
 		json.put("result", result);
-		
+
 		return json.toString();
 	}
-	
+
 	@RequestMapping(value = "multiBoard", method = RequestMethod.GET)
 	public String multiBoard(Model model) {
 		List<Map<String, Object>>list = adminService.multiBoard();
@@ -216,7 +216,33 @@ public class AdminController {
 		
 	}
 	
-	
-	
+    //multiboard 2023-08-25 어플리케이션 테스트 수행
+    @RequestMapping(value="/multiBoard", method = RequestMethod.POST)
+    public String multiBoard(@RequestParam Map<String, Map> map) {
+       //DB에 저장하기
+       int result = adminService.multiBoardInsert(map);
+       System.out.println("result" + result);
+       
+       return "redirect:/admin/multiBoard";
+    }
+    
+    //member
+    @RequestMapping(value="/member", method = RequestMethod.GET)
+    public ModelAndView member() {
+    	ModelAndView mv = new ModelAndView("/admin/member");
+    	List<Map<String, Object>> list = adminService.memberList();
+    	mv.addObject("list", list);
+    	return mv; 
+    }
+
+    //member
+    @RequestMapping(value="/gradeChange", method = RequestMethod.GET)
+    public String gradeChagne(@RequestParam Map<String, String> map) {
+    	int result = adminService.gradeChange(map);
+    	
+    	return "redirect:/admin/member";
+    }
+    
+    
 
 }

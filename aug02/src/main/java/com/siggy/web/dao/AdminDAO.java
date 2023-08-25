@@ -21,6 +21,14 @@ public interface AdminDAO {
 
 	List<Map<String, Object>> multiBoard();
 
+	int multiBoardInsert(Map<String, Map> map);
+
+	List<Map<String, Object>> memberList();
+
+	int gradeChange(Map<String, String> map);
+
+
+
 
 
 }

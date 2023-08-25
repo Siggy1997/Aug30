@@ -38,4 +38,20 @@ public class AdminService {
 		return adminDAO.multiBoard();
 	}
 
+	public int multiBoardInsert(Map<String, Map> map) {
+		return adminDAO.multiBoardInsert(map);
+	}
+
+	public List<Map<String, Object>> memberList() {
+		// TODO Auto-generated method stub
+		return adminDAO.memberList();
+	}
+
+	public int gradeChange(Map<String, String> map) {
+		return adminDAO.gradeChange(map);
+	} 
+
+
+
+
 }

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>admin || main</title>
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+
 <link rel="stylesheet" href="../css/admin.css">
 </head>
 <body>

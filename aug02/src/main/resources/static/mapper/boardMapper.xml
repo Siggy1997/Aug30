@@ -3,17 +3,17 @@
 <mapper namespace="com.siggy.web.dao.BoardDAO">
 
    <select id="boardList" resultType="BoardDTO">
-SELECT ff.*, m.m_name  
-FROM(
-   SELECT @ROWNUM:=@ROWNUM+1 AS rowNum, bb.*
-         , (SELECT COUNT(*) FROM board WHERE bdel=1) AS COUNT
-   FROM (SELECT  b.bno, b.btitle, b.bdate, b.blike, b.bdel, b.m_no
-         FROM board b) bb, (SELECT @ROWNUM:=0) AS R
+	SELECT ff.*, m.m_name  
+	FROM(
+	SELECT @ROWNUM:=@ROWNUM+1 AS rowNum, bb.*, 
+	(SELECT COUNT(*) FROM board WHERE bdel=1) AS COUNT
+	FROM (SELECT  b.bno, b.btitle, b.bdate, b.blike, b.bdel, b.m_no
+	FROM board b) bb, (SELECT @ROWNUM:=0) AS R
    WHERE bdel=1
    ORDER BY bb.bno ASC
-   ) as ff join members m on ff.m_no = m.m_no 
-order by bno desc
-LIMIT 0, 10
+     ) as ff join members m on ff.m_no = m.m_no 
+	order by bno desc
+	LIMIT 0, 10
  
       
    </select>
