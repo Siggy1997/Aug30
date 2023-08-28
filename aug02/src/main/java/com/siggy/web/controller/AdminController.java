@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.mail.EmailException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -104,7 +105,7 @@ public class AdminController {
 			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 					.getRequest();
 			String path = request.getServletContext().getRealPath("/upload");
-			// System.out.println("실제 경로 : " + path);
+			System.out.println("실제 경로 : " + path);
 
 			// upfile정보보기
 			// System.out.println(upfile.getOriginalFilename());
@@ -243,6 +244,34 @@ public class AdminController {
     	return "redirect:/admin/member";
     }
     
+    @GetMapping("/post")
+    public String post(Model model, @RequestParam(name="cate", required = false, defaultValue = "0") int cate,
+    		@RequestParam Map<String, Object> map) {
+    	//게시판 번호가 들어올 수 있습니다 추후 처리
+    	//게시판 관리번호를 다 불러 올 수 있습니다
+    	//게시글을 다 불러 올 수 있습니다
+    	if (!(map.containsKey("cate")) || map.get("cate").equals(null) || map.get("cate").equals("") ) {
+    		map.put("cate", 0);
+		}
+    	
+    	List<Map<String, Object>> boardList = adminService.boardList();
+    	model.addAttribute("boardList", boardList);
+    	
+    	
+    	List<Map<String, Object>> list = adminService.post(map);
+    	model.addAttribute("list", list);
+    	System.out.println(list);
+    	return "/admin/post";
+    }
     
+    
+    @ResponseBody
+    @GetMapping("/postA")
+    public String postA(@RequestParam("mbno") int mbno, Model model) {
+    	JSONObject json = new JSONObject();
+    	json.put("content", adminService.content(mbno));
+    	return json.toString();
+    	
+    }
 
 }

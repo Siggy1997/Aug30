@@ -1,0 +1,35 @@
+@charset "UTF-8";
+.gray {
+	background-color: #BDBDBD;
+}
+
+.div-table {
+	display: flex;
+	flex-direction: column;
+	width: 70%;
+	margin: 0 auto;
+}
+
+.div-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 70%;
+	padding: 8px;
+	border-bottom: 1px solid;
+}
+
+.div-cell {
+	flex: 1;
+	padding: 4px;
+}
+button {
+  padding: 8px 12px;
+  border-radius: 50px;
+}
+.close-btn{
+	display: flex;
+	position: relative;
+	
+	}
+

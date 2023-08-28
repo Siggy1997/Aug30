@@ -49,6 +49,19 @@ public class AdminService {
 
 	public int gradeChange(Map<String, String> map) {
 		return adminDAO.gradeChange(map);
+	}
+
+	public List<Map<String, Object>> post(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return adminDAO.post(map); 
+	}
+
+	public List<Map<String, Object>> boardList() {
+		return adminDAO.boardList();
+	}
+
+	public Object content(int mbno) {
+		return adminDAO.content(mbno);
 	} 
 
 

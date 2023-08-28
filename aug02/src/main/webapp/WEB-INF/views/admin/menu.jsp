@@ -5,7 +5,7 @@
 			<div class="menu-item" ><i class="xi-emoticon-happy-o xi-2x"></i> Happy</div>
 			<div class="menu-item" onclick="url('main')"><i class="xi-home-o xi-2x"></i> 홈</div>
 			<div class="menu-item" onclick="url('multiBoard')"><i class="xi-layout xi-2x"></i>멀티보드</div>
-			<div class="menu-item" onclick="url('post')"><i class="xi-paper-o xi-2x"></i>게시글 관리</div>
+			<div class="menu-item" onclick="url('post?cate=0')"><i class="xi-paper-o xi-2x"></i>게시글 관리</div>
 			<div class="menu-item" onclick="url('member')"><i class="xi-user-o xi-2x"></i>회원 관리</div>
 			<div class="menu-item" onclick="url('comment')"><i class="xi-comment-o xi-2x"></i>댓글 관리</div>
 			<div class="menu-item" onclick="url('message')"><i class="xi-message-o xi-2x"></i>메시지 관리</div>
