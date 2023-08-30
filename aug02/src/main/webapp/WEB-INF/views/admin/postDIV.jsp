@@ -34,7 +34,7 @@
 										},
 										dataType : "json",
 										success : function(data) {
-											$("." + mbno).html(data.content + ' <br><button type="button" class="close-btn" style="float: right">닫기</button> ');
+											$("." + mbno).html('<div class="ab">'+ "내용 : " + data.content+'</div>' + ' <br><button type="button" class="btn">닫기</button> ');
 											$("." + mbno)
 													.css(
 															{
@@ -43,7 +43,7 @@
 																"box-sizing" : "border-box",
 																"padding" : "8px",
 																"justify-content" :"center",
-																"background-color" : "red"
+																"background-color" : "#B3E5FC"
 															});
 
 										},
@@ -53,7 +53,7 @@
 									})
 						});
 
-		$(document).on("click", ".close-btn", function() {
+		$(document).on("click", ".btn", function() {
 			let commentDIV = $(this).parent();
 			commentDIV.hide();
 		});

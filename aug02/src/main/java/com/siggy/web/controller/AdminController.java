@@ -1,15 +1,24 @@
 package com.siggy.web.controller;
-
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.mail.EmailException;
 import org.json.JSONObject;
@@ -27,11 +36,19 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.siggy.web.service.AdminService;
 import com.siggy.web.util.Util;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -206,72 +223,191 @@ public class AdminController {
 
 	@RequestMapping(value = "multiBoard", method = RequestMethod.GET)
 	public String multiBoard(Model model) {
-		List<Map<String, Object>>list = adminService.multiBoard();
+		List<Map<String, Object>> list = adminService.multiBoard();
 		model.addAttribute("list", list);
 		System.out.println(list);
-		
-		
-		
-		
+
 		return "/admin/multiBoard";
+
+	}
+
+	// multiboard 2023-08-25 어플리케이션 테스트 수행
+	@RequestMapping(value = "/multiBoard", method = RequestMethod.POST)
+	public String multiBoard(@RequestParam Map<String, Map> map) {
+		// DB에 저장하기
+		int result = adminService.multiBoardInsert(map);
+		System.out.println("result" + result);
+
+		return "redirect:/admin/multiBoard";
+	}
+
+	// member
+	@RequestMapping(value = "/member", method = RequestMethod.GET)
+	public ModelAndView member() {
+		ModelAndView mv = new ModelAndView("/admin/member");
+		List<Map<String, Object>> list = adminService.memberList();
+		mv.addObject("list", list);
+		return mv;
+	}
+
+	// member
+	@RequestMapping(value = "/gradeChange", method = RequestMethod.GET)
+	public String gradeChagne(@RequestParam Map<String, String> map) {
+		int result = adminService.gradeChange(map);
+
+		return "redirect:/admin/member";
+	}
+
+	@GetMapping("/post")
+	public String post(Model model, @RequestParam(name = "cate", required = false, defaultValue = "0") int cate,
+			@RequestParam Map<String, Object> map) {
+		// 게시판 번호가 들어올 수 있습니다 추후 처리
+		// 게시판 관리번호를 다 불러 올 수 있습니다
+		// 게시글을 다 불러 올 수 있습니다
+		if (!(map.containsKey("cate")) || map.get("cate").equals(null) || map.get("cate").equals("")) {
+			map.put("cate", 0);
+		}
+
+		List<Map<String, Object>> boardList = adminService.boardList();
+		model.addAttribute("boardList", boardList);
+
+		List<Map<String, Object>> list = adminService.post(map);
+		model.addAttribute("list", list);
+		System.out.println(list);
+		return "/admin/post";
+	}
+
+	@ResponseBody
+	@GetMapping("/postA")
+	public String postA(@RequestParam("mbno") int mbno, Model model) {
+		JSONObject json = new JSONObject();
+		json.put("content", adminService.content(mbno));
+		return json.toString();
+
+	}
+
+	@GetMapping("/corona")
+	public String corona(Model model) throws Exception {
+		StringBuilder urlBuilder = new StringBuilder(
+				"http://apis.data.go.kr/1790387/covid19CurrentStatusKorea/covid19CurrentStatusKoreaJason"); /* URL */
+		urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=UE0hLBcTHsABfsGV2ls2NUy6CDn7Joax5RA%2BATYK9Do91vcAcP94TuFlbMiWRc6KWo51IaJntHR2LSSYVvLA4w%3D%3D"); /* Service Key */
+		URL url = new URL(urlBuilder.toString());
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		conn.setRequestProperty("Content-type", "application/json");
+		System.out.println("Response code: " + conn.getResponseCode());
+		BufferedReader rd;
+		if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		} else {
+			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+		}
+		StringBuilder sb = new StringBuilder();
+		String line;
+		while ((line = rd.readLine()) != null) {
+			sb.append(line);
+		}
+		rd.close();
+		conn.disconnect();
+		//System.out.println(sb.toString());
+		model.addAttribute("corona", sb.toString()); 
+		
+		//String to JSon
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonN = objectMapper.readTree(sb.toString());
+		
+		System.out.println(jsonN.get("response").get("result").get(0));
+		
+		//json to Map
+		   Map<String, Object> result = objectMapper.readValue(
+		            (jsonN.get("response").get("result").get(0)).toString()
+		            , new TypeReference<Map<String, Object>>(){}
+		            );
+
+		
+		System.out.println(result);
+		model.addAttribute("result", result);
+		
+		
+		return "/admin/corona";
 		
 	}
-	
-    //multiboard 2023-08-25 어플리케이션 테스트 수행
-    @RequestMapping(value="/multiBoard", method = RequestMethod.POST)
-    public String multiBoard(@RequestParam Map<String, Map> map) {
-       //DB에 저장하기
-       int result = adminService.multiBoardInsert(map);
-       System.out.println("result" + result);
-       
-       return "redirect:/admin/multiBoard";
-    }
-    
-    //member
-    @RequestMapping(value="/member", method = RequestMethod.GET)
-    public ModelAndView member() {
-    	ModelAndView mv = new ModelAndView("/admin/member");
-    	List<Map<String, Object>> list = adminService.memberList();
-    	mv.addObject("list", list);
-    	return mv; 
-    }
 
-    //member
-    @RequestMapping(value="/gradeChange", method = RequestMethod.GET)
-    public String gradeChagne(@RequestParam Map<String, String> map) {
-    	int result = adminService.gradeChange(map);
-    	
-    	return "redirect:/admin/member";
-    }
-    
-    @GetMapping("/post")
-    public String post(Model model, @RequestParam(name="cate", required = false, defaultValue = "0") int cate,
-    		@RequestParam Map<String, Object> map) {
-    	//게시판 번호가 들어올 수 있습니다 추후 처리
-    	//게시판 관리번호를 다 불러 올 수 있습니다
-    	//게시글을 다 불러 올 수 있습니다
-    	if (!(map.containsKey("cate")) || map.get("cate").equals(null) || map.get("cate").equals("") ) {
-    		map.put("cate", 0);
-		}
-    	
-    	List<Map<String, Object>> boardList = adminService.boardList();
-    	model.addAttribute("boardList", boardList);
-    	
-    	
-    	List<Map<String, Object>> list = adminService.post(map);
-    	model.addAttribute("list", list);
-    	System.out.println(list);
-    	return "/admin/post";
-    }
-    
-    
-    @ResponseBody
-    @GetMapping("/postA")
-    public String postA(@RequestParam("mbno") int mbno, Model model) {
-    	JSONObject json = new JSONObject();
-    	json.put("content", adminService.content(mbno));
-    	return json.toString();
-    	
-    }
+	@GetMapping("/air2")
+	public String air2() throws Exception {
+		  StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B552584/ArpltnStatsSvc/getMsrstnAcctoRDyrg"); /*URL*/
+	        urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=UE0hLBcTHsABfsGV2ls2NUy6CDn7Joax5RA%2BATYK9Do91vcAcP94TuFlbMiWRc6KWo51IaJntHR2LSSYVvLA4w%3D%3D"); /*Service Key*/
+	        urlBuilder.append("&returnType=json"); /*xml 또는 json*/
+	        urlBuilder.append("&numOfRows=100"); /*한 페이지 결과 수*/
+	        urlBuilder.append("&pageNo=1"); /*페이지번호*/
+	        urlBuilder.append("&inqBginDt=20230801"); /*조회시작일자*/
+	        urlBuilder.append("&inqEndDt=20230829"); /*조회종료일자*/
+	        urlBuilder.append("&" + URLEncoder.encode("msrstnName","UTF-8") + "=" + URLEncoder.encode("강남구", "UTF-8")); /*측정소명*/
+	        URL url = new URL(urlBuilder.toString());
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("GET");
+	        conn.setRequestProperty("Content-type", "application/json");
+	        System.out.println("Response code: " + conn.getResponseCode());
+	        BufferedReader rd;
+	        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+	            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        } else {
+	            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+	        }
+	        StringBuilder sb = new StringBuilder();
+	        String line;
+	        while ((line = rd.readLine()) != null) {
+	            sb.append(line);
+	        }
+	        rd.close();
+	        conn.disconnect();
+	        System.out.println(sb.toString());
+	        
+	        //String to xml 
+	        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder builder = factory.newDocumentBuilder();
+	        Document document = builder.parse(new InputSource(new StringReader(sb.toString())));
+	        
+	        System.out.println(document);
+	        
+		
+		return "";
+	}
+	
+	
+	
+	@GetMapping("/air")
+	   public String air(Model model) throws Exception {
+	      // String to xml
+	      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	      DocumentBuilder builder = factory.newDocumentBuilder();
+	      Document document = builder.parse("c:\\Temp\\air.xml");
+
+	      //document.getDocumentElement().normalize();
+	      System.out.println(document.getDocumentElement().getNodeName());
+	      
+	      NodeList list = document.getElementsByTagName("item");
+	         //System.out.println("item length = " + list.getLength());
+	         //System.out.println(list.toString());
+	         ArrayList<Map<String, Object>> coronaList = new ArrayList<Map<String,Object>>();
+	         for (int i = list.getLength() - 1; i >= 0; i--) {
+	            NodeList childList = list.item(i).getChildNodes();
+	            
+	            Map<String, Object> value = new HashMap<String, Object>();
+	            for (int j = 0; j < childList.getLength(); j++) {
+	               Node node = childList.item(j);
+	               if (node.getNodeType() == Node.ELEMENT_NODE) { 
+	                  //System.out.println(node.getNodeName());
+	                  //System.out.println(node.getTextContent());
+	                  value.put(node.getNodeName(), node.getTextContent());
+	               }
+	            }
+	            coronaList.add(value);
+	         }
+	         System.out.println("xml : " + coronaList);
+	         model.addAttribute("list", coronaList);
+
+	      return "/admin/air";
+	   }
 
 }

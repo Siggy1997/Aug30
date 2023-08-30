@@ -16,6 +16,7 @@ body {
 	background-color: black;
 	float: left;
 	overflow: hidden;
+	z-index: 10;
 }
 .menu:hover{
 	width: 200px;
